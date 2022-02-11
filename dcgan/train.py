@@ -39,13 +39,9 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, epoch):
                   % (epoch, params['nepochs'], i, len(dataloader),
                      errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
 
-        G_losses.append(errG.item())
-        D_losses.append(errD.item())
-
         if (iters % 100 == 0) or ((epoch == params['nepochs']-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
                 fake_data = netG(fixed_noise).detach().cpu()
-            img_list.append(vutils.make_grid(fake_data, padding=2, normalize=True))
 
         iters += 1
 

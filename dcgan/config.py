@@ -13,7 +13,7 @@ params = {
     'nepochs' : 1,# Number of training epochs.
     'lr' : 0.0002,# Learning rate for optimizers
     'beta1' : 0.5,# Beta1 hyperparam for Adam optimizer
-    'save_epoch' : 2}# Save step.
+}
 
 seed = 369
 random.seed(seed)
@@ -28,6 +28,3 @@ fixed_noise = torch.randn(64, params['nz'], 1, 1, device=device)
 real_label = 1
 fake_label = 0
 
-img_list = []
-G_losses = []
-D_losses = []
