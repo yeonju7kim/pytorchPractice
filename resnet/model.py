@@ -7,11 +7,8 @@ from resnet import *
 class ResNet(nn.Module):
     def __init__(self, layers=None, global_params=None):
         super(ResNet, self).__init__()
-        assert isinstance(layers, tuple), "blocks_args should be a tuple"
-        assert len(layers) > 0, "layers must be greater than 0"
 
-        if global_params.norm_layer is None:
-            norm_layer = nn.BatchNorm2d
+        norm_layer = nn.BatchNorm2d
         self._norm_layer = norm_layer
 
         self.inplanes = 64
@@ -79,7 +76,6 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def extract_features(self, inputs):
-        """ Returns output of the final convolution layer """
         x = self.conv1(inputs)
         x = self.bn1(x)
         x = self.relu(x)

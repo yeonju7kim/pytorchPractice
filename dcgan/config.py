@@ -28,3 +28,5 @@ fixed_noise = torch.randn(64, params['nz'], 1, 1, device=device)
 real_label = 1
 fake_label = 0
 
+optim_G = optim.Adam
+optim_D = optim.Adam

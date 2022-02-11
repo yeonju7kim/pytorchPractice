@@ -54,4 +54,4 @@ def save(netG, netD, optimizerG, optimizerD, epoch):
         'optimizerG' : optimizerG.state_dict(),
         'optimizerD' : optimizerD.state_dict(),
         'params' : params
-        }, 'model/model_epoch_{}.pth'.format(epoch))
+        }, 'checkpoint/model_epoch_{}.pth'.format(epoch))
