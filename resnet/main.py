@@ -1,10 +1,12 @@
+import os
 import torch
-from resnet import ResNet
-from torch.utils.data import DataLoader
-from cifar10_data_loader import *
+from model import ResNet
+from data import *
 from torch import cuda, nn, optim, tensor
+import torchvision.transforms as transforms
+from resnet import RandomResize
 
-batchsize = 20
+batchsize = 256
 iteration = 5
 device = 'cuda' if cuda.is_available() else 'cpu'
 learning_rate = 0.1
@@ -12,7 +14,26 @@ criterion = nn.CrossEntropyLoss()
 model = ResNet.from_pretrained('resnet18', num_classes=10).to(device)
 # model = ResNet.from_name('resnet18', override_params={"num_classes": 10}).to(device)
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=0.0002)
-train_dataloader, test_dataloader = get_cifar10_dataloader(batchsize)
+# TODO 0.1이고 err가 변하지 않을 때 10씩 나눔. 구현 필요
+
+transform_param = {
+    'short_resize': 256,
+    'long_resize' : 480,
+    'random_crop' : 224,
+}
+
+transform = transforms.Compose([
+    RandomResize((transform_param['short_resize'], transform_param['long_resize'] + 1)),
+    transforms.RandomCrop((transform_param['random_crop'], transform_param['random_crop'])),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    # TODO 0~255로 사용한 것으로 보이는데,에러가 나서 일단 0~1로
+    transforms.Normalize((0.5, 0.5, 0.5),
+                         (0.5, 0.5, 0.5))
+    # TODO pixel mean 을 뺐다고 하는데 값을 모름..
+])
+
+train_dataloader, test_dataloader = get_cifar10_dataloader(batchsize, transform=transform)
 file_name = 'resnet18_cifar10'
 
 def main():

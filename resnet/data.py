@@ -1,10 +1,5 @@
-import os
-
 import numpy as np
-import pandas as pd
 from torch.utils.data import DataLoader, Dataset
-from torchvision.io import read_image
-
 
 class Cifar10Dataset(Dataset):
     def __init__(self, data, filenames, labels, all_labels, transform=None, target_transform=None):
@@ -29,8 +24,8 @@ class Cifar10Dataset(Dataset):
             label = self.target_transform(label)
         return image, label, label_onehot
 
-def get_cifar10_dataloader(batch_size, shuffle=True):
-    trainDataset, testDataset = get_cifar10_dataset('../data/cifar-10-batches-py')
+def get_cifar10_dataloader(batch_size, shuffle=True, transform=None):
+    trainDataset, testDataset = get_cifar10_dataset('../data/cifar-10-batches-py', transform)
     trainDataLoader = DataLoader(trainDataset, batch_size=batch_size,shuffle =shuffle)
     testDataLoader = DataLoader(testDataset, batch_size=batch_size,shuffle=shuffle)
     return trainDataLoader, testDataLoader
@@ -41,7 +36,7 @@ def unpickle(file):
         dict = pickle.load(fo, encoding='bytes')
     return dict
 
-def get_cifar10_dataset(data_dir):
+def get_cifar10_dataset(data_dir, transform = None):
     meta_data_dict = unpickle(data_dir + "/batches.meta")
     cifar_label_names = meta_data_dict[b'label_names']
     cifar_label_names = np.array(cifar_label_names)
@@ -72,5 +67,5 @@ def get_cifar10_dataset(data_dir):
     cifar_test_filenames = np.array(cifar_test_filenames)
     cifar_test_labels = np.array(cifar_test_labels)
 
-    return Cifar10Dataset(cifar_train_data, cifar_train_filenames, cifar_train_labels, cifar_label_names),\
-           Cifar10Dataset(cifar_test_data, cifar_test_filenames, cifar_test_labels, cifar_label_names)
+    return Cifar10Dataset(cifar_train_data, cifar_train_filenames, cifar_train_labels, cifar_label_names, transform),\
+           Cifar10Dataset(cifar_test_data, cifar_test_filenames, cifar_test_labels, cifar_label_names, transform)
