@@ -1,7 +1,8 @@
-import torchvision.utils as vutils
+import os.path
 from config import *
 
-def train(netD, netG, optimizerD, optimizerG, dataloader, epoch):
+
+def train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_epoch):
     iters = 0
     for i, data in enumerate(dataloader, 0):
         real_data = data[0].to(device)
@@ -16,11 +17,12 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, epoch):
 
         noise = torch.randn(b_size, params['nz'], 1, 1, device=device)
         fake_data = netG(noise)
-        label.fill_(fake_label  )
+        label.fill_(fake_label)
         output = netD(fake_data.detach()).view(-1)
+        # fake_data(Tensor) 와 관련된 모든 operation과 tensor는 tracking 되기 때문에 이것을 detach함
         errD_fake = criterion(output, label)
         errD_fake.backward()
-        D_G_z1 = output.mean().item()
+        D_G_z1 = output.mean().item() # fake 이미지를 fake로 추론
 
         errD = errD_real + errD_fake
         optimizerD.step()
@@ -31,13 +33,19 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, epoch):
         errG = criterion(output, label)
         errG.backward()
 
-        D_G_z2 = output.mean().item()
+        D_G_z2 = output.mean().item() # real로 추론
         optimizerG.step()
 
         if i%50 == 0:
             print('[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
-                  % (epoch, params['nepochs'], i, len(dataloader),
+                  % (epoch + last_epoch, params['nepochs'] + last_epoch, i, len(dataloader),
                      errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
+
+        history.add_history("d error", errD.item())
+        history.add_history("g error", errG.item())
+        history.add_history("average output of real data", D_x)
+        history.add_history("fake data output before g update", D_G_z1)
+        history.add_history("fake data output after g update", D_G_z2)
 
         if (iters % 100 == 0) or ((epoch == params['nepochs']-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
@@ -45,13 +53,15 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, epoch):
 
         iters += 1
 
-    save(netG, netD, optimizerG, optimizerD, epoch)
+    save(netG, netD, optimizerG, optimizerD, epoch + last_epoch + 1)
 
 def save(netG, netD, optimizerG, optimizerD, epoch):
+    if os.path.exists("checkpoint") == False:
+        os.mkdir("checkpoint")
     torch.save({
         'generator' : netG.state_dict(),
         'discriminator' : netD.state_dict(),
         'optimizerG' : optimizerG.state_dict(),
         'optimizerD' : optimizerD.state_dict(),
         'params' : params
-        }, 'checkpoint/model_epoch_{}.pth'.format(epoch))
+        }, 'checkpoint/model_epoch_{:03d}.pth'.format(epoch))

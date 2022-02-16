@@ -25,7 +25,7 @@ class Cifar10Dataset(Dataset):
         return image, label, label_onehot
 
 def get_cifar10_dataloader(batch_size, shuffle=True, transform=None):
-    trainDataset, testDataset = get_cifar10_dataset('../data/cifar-10-batches-py', transform)
+    trainDataset, testDataset = get_cifar10_dataset('D:\data\image\cifar-10-batches-py', transform)
     trainDataLoader = DataLoader(trainDataset, batch_size=batch_size,shuffle =shuffle)
     testDataLoader = DataLoader(testDataset, batch_size=batch_size,shuffle=shuffle)
     return trainDataLoader, testDataLoader

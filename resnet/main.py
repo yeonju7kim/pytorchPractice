@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 from resnet import RandomResize
 
 
-# model = ResNet.from_pretrained('resnet18', num_classes=10).to(device)
+model = ResNet.from_pretrained('resnet18', num_classes=10).to(device)
 model = ResNet.from_name('resnet18', override_params={"num_classes": 10}).to(device)
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=0.0002)
 # TODO 0.1이고 err가 변하지 않을 때 10씩 나눔. 구현 필요
