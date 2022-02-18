@@ -1,4 +1,5 @@
 from data import *
+from model import *
 
 def main():
     tokenizer = get_tokenizer_dictionary()
@@ -6,7 +7,8 @@ def main():
     valid_iter = get_valid_iter()
     vocab = get_vocab(train_iter, tokenizer)
 
-    transformer = transformer()
+    transformer = Seq2SeqTransformer(NUM_ENCODER_LAYERS, NUM_DECODER_LAYERS, EMB_SIZE,
+                                     NHEAD, SRC_VOCAB_SIZE, TGT_VOCAB_SIZE, FFN_HID_DIM)
 
     history = history()
 
