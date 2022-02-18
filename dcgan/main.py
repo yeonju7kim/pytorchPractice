@@ -10,8 +10,6 @@ import os, re
 from utils.history import *
 
 def main():
-    dataloader = get_celeba(params)
-
     loaded_model, last_epoch = get_last_model()
 
     netG = Generator(params).to(device)
@@ -33,16 +31,16 @@ def main():
 
 
     history = ValueHistory()
-    for epoch in range(params['nepochs']):
+    # dataloader = get_celeba(params)
+    # for epoch in range(params['nepochs']):
         # train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_epoch + 1)
-        history.save_csv_all_history(f"train_err_{epoch + last_epoch + 1}", "../history")
-        # pass
+        # history.save_csv_all_history(f"train_err_{epoch + last_epoch + 1}", "../history")
     # generate(1, netG)
     # generate(2, load_path= "checkpoint/model_epoch_0.pth")
     # generate_gradation_with_interpolation(2, load_path= "checkpoint/model_epoch_1.pth")
     # generate_gradation_with_interpolation(10)
     # generate_gradation_with_interpolation(10, netG)
-    generate_with_calculated_context_vector(3, netD, netG)
+    generate_with_calculated_context_vector(params["bsize"], netG)
 
 if __name__ == '__main__':
     main()

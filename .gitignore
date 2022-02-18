@@ -2,3 +2,4 @@ pytorch/
 .idea
 summary
 data/
+.data

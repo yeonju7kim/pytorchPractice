@@ -44,8 +44,8 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_e
         history.add_history("d error", errD.item())
         history.add_history("g error", errG.item())
         history.add_history("average output of real data", D_x)
-        history.add_history("fake data output before g update", D_G_z1)
-        history.add_history("fake data output after g update", D_G_z2)
+        history.add_history("fake data output before d update", D_G_z1)
+        history.add_history("fake data output after d update", D_G_z2)
 
         if (iters % 100 == 0) or ((epoch == params['nepochs']-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
