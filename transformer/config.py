@@ -9,8 +9,7 @@ special_symbols = ['<unk>', '<pad>', '<bos>', '<eos>']
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 initialize_method = nn.init.xavier_uniform_
 
-SRC_VOCAB_SIZE = len(vocab_transform[SRC_LANGUAGE])
-TGT_VOCAB_SIZE = len(vocab_transform[TGT_LANGUAGE])
+NUM_EPOCHS = 18
 EMB_SIZE = 512
 NHEAD = 8
 FFN_HID_DIM = 512
@@ -20,3 +19,7 @@ NUM_DECODER_LAYERS = 3
 RANDOM_SEED = 0
 
 torch.manual_seed(RANDOM_SEED)
+
+loss_fn = torch.nn.CrossEntropyLoss(ignore_index=PAD_IDX)
+
+optimizer_fn = torch.optim.Adam
