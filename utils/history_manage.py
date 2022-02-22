@@ -39,6 +39,8 @@ class ValueHistory():
         else:
             if os.path.exists(path) == False:
                 os.mkdir(path)
+        if ".csv" not in filename:
+            filename = filename + ".csv"
         filepath = path + "\\" + filename
         longest_len = 0
         for k, v in self.value_dictionary.items():

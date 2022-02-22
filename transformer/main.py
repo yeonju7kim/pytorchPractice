@@ -1,6 +1,6 @@
 from data import *
 from model import *
-from utils.history import *
+from utils.history_manage import *
 
 def main():
     de_en_data = DeEnData()

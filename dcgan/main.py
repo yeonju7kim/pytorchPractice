@@ -7,7 +7,7 @@ from generate import *
 from config import *
 import torch.utils.model_zoo as model_zoo
 import os, re
-from utils.history import *
+from utils.history_manage import *
 
 def main():
     loaded_model, last_epoch = get_last_model()
