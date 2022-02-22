@@ -109,7 +109,7 @@ class Seq2SeqTransformer(nn.Module):
         self.train()
         losses = 0
 
-        for src, tgt in train_dataloader:
+        for idx, (src, tgt) in enumerate(train_dataloader):
             src = src.to(DEVICE)
             tgt = tgt.to(DEVICE)
 
