@@ -1,8 +1,6 @@
 import torchvision.utils as vutils
-import numpy as np
 import matplotlib.pyplot as plt
-from model import Generator, Discriminator
-from config import *
+from model import Generator
 from data import *
 from PIL import Image
 def generate(num_output, netG = None, load_path = None):

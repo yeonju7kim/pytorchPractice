@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import re, os
 
 def weights_init(w):
     classname = w.__class__.__name__
@@ -74,3 +74,16 @@ class Discriminator(nn.Module):
         x = F.sigmoid(self.conv5(x))
 
         return x
+
+
+def get_last_model():
+    if os.path.exists("checkpoint") == False:
+        return None, -1
+    file_list = os.listdir("checkpoint")
+    file_list.sort()
+    file_list_pth = [file for file in file_list if file.endswith(".pth")]
+    if len(file_list_pth) == 0:
+        return None, -1
+    last_model = torch.load("checkpoint/"+file_list_pth[-1])
+    last_epoch = re.findall("\d+", file_list_pth[-1])
+    return last_model, int(last_epoch[0])

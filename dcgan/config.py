@@ -13,6 +13,7 @@ params = {
     'nepochs' : 10,# Number of training epochs.
     'lr' : 0.0002,# Learning rate for optimizers
     'beta1' : 0.5,# Beta1 hyperparam for Adam optimizer
+    'beta2' : 0.999,# Beta1 hyperparam for Adam optimizer
 }
 
 seed = 369
