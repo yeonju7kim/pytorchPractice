@@ -4,6 +4,12 @@ from config import *
 
 def train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_epoch):
     iters = 0
+    errD_losses = 0
+    errG_losses = 0
+    D_x_losses = 0
+    D_G_z1_losses = 0
+    D_G_z2_losses = 0
+
     for i, data in enumerate(dataloader, 0):
         real_data = data[0].to(device)
         b_size = real_data.size(0)
@@ -41,11 +47,11 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_e
                   % (epoch + last_epoch, params['nepochs'] + last_epoch, i, len(dataloader),
                      errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
 
-        history.add_history("d error", errD.item())
-        history.add_history("g error", errG.item())
-        history.add_history("average output of real data", D_x)
-        history.add_history("fake data output before d update", D_G_z1)
-        history.add_history("fake data output after d update", D_G_z2)
+        # history.add_history("d error", errD.item())
+        # history.add_history("g error", errG.item())
+        # history.add_history("average output of real data", D_x)
+        # history.add_history("fake data output before d update", D_G_z1)
+        # history.add_history("fake data output after d update", D_G_z2)
 
         if (iters % 100 == 0) or ((epoch == params['nepochs']-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
@@ -53,7 +59,20 @@ def train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_e
 
         iters += 1
 
+        errD_losses += errD.item()
+        errG_losses += errG.item()
+        D_x_losses = D_x
+        D_G_z1_losses = D_G_z1
+        D_G_z2_losses = D_G_z2
+
     save(netG, netD, optimizerG, optimizerD, epoch + last_epoch + 1)
+
+    dataloader_length = len(dataloader)
+    history.add_history("d error", errD_losses/ dataloader_length)
+    history.add_history("g error", errG_losses/ dataloader_length)
+    history.add_history("average output of real data", D_x_losses/ dataloader_length)
+    history.add_history("fake data output before d update", D_G_z1_losses/ dataloader_length)
+    history.add_history("fake data output after d update", D_G_z2_losses/ dataloader_length)
 
 def save(netG, netD, optimizerG, optimizerD, epoch):
     if os.path.exists("checkpoint") == False:

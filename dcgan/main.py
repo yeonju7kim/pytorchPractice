@@ -37,7 +37,8 @@ def main():
     for epoch in range(params['nepochs']):
         train(netD, netG, optimizerD, optimizerG, dataloader, history, epoch, last_epoch + 1)
         # 가장 최적의 모델을 알 수 없으니 일단 모든 epoch의 모델을 저장했다.
-        history.save_csv_all_history(f"train_err_{epoch + last_epoch + 1}", "../history")
+        # history.save_csv_all_history(f"train_err_{epoch + last_epoch + 1}", "../history")
+    history.save_csv_all_history(f"train_err_overall", "../history")
 
     # 학습한 generator로 1개의 random으로 생성된 latent vector로 1개의 이미지를 합성
     generate(1, netG)
