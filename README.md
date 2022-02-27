@@ -1,3 +1,3 @@
 # pytorchPractice
 
-## pytorch 연습
+open-source clone coding
